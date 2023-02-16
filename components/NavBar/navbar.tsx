@@ -16,7 +16,7 @@ const NavBar: NextPage<Props> = (props) => {
 
     return (
         <>
-        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-2.5 md:pb-10 lg:grid-cols-1 md:items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-x-2.5 lg:grid-cols-1 lg:gap-x-0 md:pb-10 lg:pb-0 lg:gap-y-4 lg:pr-5 md:items-stretch">
             <div>                
                 <Header handleOpen={handleOpen} isOpen={isOpen}/>
             </div>

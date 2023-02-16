@@ -61,7 +61,7 @@ function Suggestions() {
         </div>
         <div className="lg:col-span-9">
             <Sort />
-        <div className="px-6 py-8 md:px-0">
+        <div className="px-6 py-8 md:px-0 lg:pt-4">
         {suggestionCards}
           </div>
         </div>
