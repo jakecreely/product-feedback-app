@@ -1,34 +1,37 @@
 import Layout from "@/components/layout"
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import NavBar from "@/components/NavBar/navbar"
 import Sort from "@/components/sort"
 import Card from "@/components/suggestionCard"
+import { GetStaticProps, NextPage } from "next"
+import { GetData, ProductRequest } from "@/types"
 
-function Suggestions() {
+// export const getStaticProps: GetStaticProps = async () => {
+//   const res = await fetch('localhost:3000/api/hello')
+//   const { productRequests }: GetData = await res.json()
+
+//   return {
+//     props: {
+//       suggestions: productRequests,
+//     }
+//   }
+
+// } 
+
+
+// const Suggestions: NextPage<{productRequests: ProductRequest[]}> = ({productRequests}) => {
+  const Suggestions: NextPage = () => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const [suggestions, setSuggestions] = useState<ProductRequest[]>([])
 
-    let suggestions: {
-      title: string, 
-      description: string,
-      tags: string[],
-      upvotes: number,
-      comments: number,
-    }[] = [{
-      title: "Add dark mode",
-      description: "It would be great if you could add a dark mode to the website",
-      tags: ["Feature"],
-      upvotes: 10,
-      comments: 2,
-    }]
-    
-    // let suggestions: {
-    //   title: string,
-    //   description: string,
-    //   tags: string[],
-    //   upvotes: number,
-    //   comments: number,
-    // }[] = []
+      useEffect(() => {
+        fetch('data.json')
+        .then(res => res.json())
+        .then(data => {
+          setSuggestions(data.productRequests)
+        })
+      }, [])
 
     let suggestionCards: ReactElement[] = []
 
@@ -40,17 +43,20 @@ function Suggestions() {
         </div>
       )
     } else {
-      suggestions.map(suggestion => (
+      suggestions.map(suggestion => {
+        console.log(suggestion)
         suggestionCards.push(
         <Card 
-          title={suggestion.title} 
+          id={suggestion.id}
+          title={suggestion.title}
           description={suggestion.description}
-          tags={suggestion.tags}
+          category={suggestion.category}
           upvotes={suggestion.upvotes}
           comments={suggestion.comments}
+          status={suggestion.status}
         />
         )
-        ))}
+        })}
 
 // `${isOpen ? 'bg-[#647196]' : 'bg-[#F7F8FD]'}
 
