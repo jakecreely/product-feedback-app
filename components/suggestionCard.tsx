@@ -1,14 +1,8 @@
+import { ProductRequest } from "@/types";
 import Link from "next/link";
 
-interface Props {
-    title: string,
-    description: string,
-    tags: string[],
-    upvotes: number,
-    comments: number,
-}
+const Card = ({id, title, description, category, upvotes, comments}: ProductRequest)  => {
 
-export default function Card({title, description, tags, upvotes, comments}: Props) {
     return (
         //ID is hardcoded for now
         <Link href={"/feedback/detail/" + 2}>
@@ -21,9 +15,7 @@ export default function Card({title, description, tags, upvotes, comments}: Prop
                 {description}
             </div>
             <div className="flex gap-x-2 pb-4">
-            {tags.map((tag) => (
-                <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg">{tag}</div>
-            ))}                
+            <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg">{category}</div>)                
             </div>
             </div>
             <div className="flex justify-between md:order-first">
@@ -31,13 +23,15 @@ export default function Card({title, description, tags, upvotes, comments}: Prop
                 <img src="assets/shared/icon-arrow-up.svg" className="object-scale-down"/>{upvotes}
                 </div>
                 <div className="flex gap-1 py-2 px-4  text-secondary text-xs font-semibold rounded-lg md:hidden">
-                <img src="assets/shared/icon-comments.svg" className="object-scale-down"/>{comments}
+                <img src="assets/shared/icon-comments.svg" className="object-scale-down"/>{comments === undefined ? 0 : comments.length}
                 </div>
             </div>
             <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto ">
-                <img src="assets/shared/icon-comments.svg" className="object-scale-down"/>{comments}
+                <img src="assets/shared/icon-comments.svg" className="object-scale-down"/>{comments === undefined ? 0 : comments.length}
                 </div>
         </div>
         </Link>
     )
 }
+
+export default Card
