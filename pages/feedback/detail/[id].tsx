@@ -65,7 +65,7 @@ export default function Details() {
                     <div className='flex flex-col gap-y-6 bg-white rounded-xl p-6'>
                         <div className='text-lg'>Add a comment</div>
                         <div className='flex flex-col'>
-                        <textarea className='w-full h-20 rounded-xl border-2 border-gray-200 p-4' placeholder='Type your comment here'></textarea>
+                        <textarea className='w-full h-20' placeholder='Type your comment here'></textarea>
                         <div className='flex justify-between align-middle'>
                             <div>
                                 250 characters left

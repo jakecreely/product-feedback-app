@@ -135,4 +135,20 @@ a {
   button {
     @apply font-jost font-bold text-sm px-10 py-4 text-white bg-black rounded-lg;
   }
+
+  textarea {
+    @apply font-jost font-normal text-base px-6 py-3 bg-[#F7F8FD] rounded-lg;
+  }
+
+  select {
+    @apply font-jost font-normal text-base px-6 py-3 bg-[#F7F8FD] rounded-lg;
+  }
+
+  input {
+    @apply font-jost font-normal text-base px-6 py-3 bg-[#F7F8FD] rounded-lg;
+  }
+
+  option {
+    @apply font-jost font-normal text-base px-6 py-3 bg-[#FFFFFF] rounded-lg;
+  }
 }

@@ -10,7 +10,7 @@ export default function Sort() {
             </div>
             <div className="align-baseline py-2">
             <label htmlFor="sort-by" className="text-white font-jost font-regular text-xs">Sort by: </label>
-            <select id="sort-by" className="bg-blue text-white font-bold text-xs">
+            <select id="sort-by" className="bg-blue text-white font-bold text-xs p-0 ">
                 <option value="most_upvotes">Most Upvotes</option>
                 <option value="least_upvotes">Least Upvotes</option>
                 <option value="most_comments">Most Comments</option>
