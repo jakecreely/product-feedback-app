@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  name     String     @unique
+  feedback Feedback[]
+}
+
+model Status {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  name     String     @unique
+  feedback Feedback[]
+}
+
+model Comment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  replies    Reply[]
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.ObjectId
+  feedback   Feedback @relation(fields: [feedbackID], references: [id])
+    feedbackID String   @db.ObjectId
+}
+
+model Feedback {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  category    Category  @relation(fields: [categoryID], references: [id])
+  categoryID  String    @db.ObjectId
+  comments    Comment[]
+  user        User      @relation(fields: [userID], references: [id])
+  userID      String    @db.ObjectId
+  upvotes     Int       @default(0)
+  status      Status    @relation(fields: [statusID], references: [id])
+  statusID    String    @db.ObjectId
+}
+
+model Reply {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  //replyingTo String - Can access this through the comment model
+  commentID String  @db.ObjectId
+  comment   Comment @relation(fields: [commentID], references: [id])
+  user      User    @relation(fields: [userID], references: [id])
+  userID    String  @db.ObjectId
+}
+
+model User {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  image    String
+  name     String
+  username String     @unique
+  replies  Reply[]
+  feedback Feedback[]
+  comments Comment[]
+}
