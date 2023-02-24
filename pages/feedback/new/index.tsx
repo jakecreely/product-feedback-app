@@ -3,6 +3,19 @@ import { useRouter } from "next/router"
 export default function New() {
     const router = useRouter()
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget as HTMLFormElement)
+        const data = Object.fromEntries(formData.entries())
+        console.log(JSON.stringify(data))
+        const res = await fetch('/api/feedback', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        })
+        const result = await res.json()
+        router.push('/feedback/detail/' + result.id)
+    }
+
     return (
         <div className='grid grid-cols-1 gap-y-14 p-6 md:px-10 md:py-14 lg:px-80 lg:py-20'>
             <div className='flex justify-between'>
@@ -15,7 +28,7 @@ export default function New() {
                 <div className="text-2xl pb-6">
                     Create New Feedback
                 </div>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className='flex flex-col gap-y-6'>
                         <div className='flex flex-col gap-y-2'>
                             <label htmlFor='title'>
@@ -24,7 +37,7 @@ export default function New() {
                                 <p>Add a short, descriptive headline</p>
                             </div>
                             </label>
-                            <input type='text' name='title' id='title' className='' />
+                            <input type='text' name='title' id='title' />
                         </div>
                         <div className='flex flex-col gap-y-2'>
                             <label htmlFor='category'>
@@ -34,11 +47,11 @@ export default function New() {
                                 </div>
                             </label>
                             <select name='category' id='category' className=''>
-                                <option value='feature'>Feature</option>
-                                <option value='ui'>UI</option>
-                                <option value='ux'>UX</option>
-                                <option value='enhancement'>Enhancement</option>
-                                <option value='bug'>Bug</option>
+                                <option value='Feature'>Feature</option>
+                                <option value='UI'>UI</option>
+                                <option value='UI'>UX</option>
+                                <option value='Enhancement'>Enhancement</option>
+                                <option value='Bug'>Bug</option>
                             </select>
                         </div>
                         <div className='flex flex-col gap-y-2'>
@@ -51,7 +64,7 @@ export default function New() {
                                 <textarea name='detail' id='detail' className='' />
                         </div>
                         <div className='flex flex-col gap-y-2'>
-                            <button className='bg-primary text-white rounded-md p-2'>Add Feedback</button>
+                            <button className='bg-primary text-white rounded-md p-2' type='submit'>Add Feedback</button>
                             <button className='bg-blue text-blue-500 rounded-md p-2'>Cancel</button>
                         </div>
                     </div>

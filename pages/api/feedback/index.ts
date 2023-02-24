@@ -8,8 +8,35 @@ const prisma = new PrismaClient()
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Feedback[]>
+  res: NextApiResponse<Feedback[] | Feedback>
 ) {
-  const feedback = await prisma.feedback.findMany()
-  res.json(feedback) 
+  if (req.method === 'GET') {
+    const feedback = await prisma.feedback.findMany()
+    res.json(feedback)
+  } else if (req.method === 'POST') {
+    const { title, detail, category } = JSON.parse(req.body)
+    console.log(title)
+    const feedback = await prisma.feedback.create({
+      data: {
+        title: title,
+        description: detail,
+        category: {
+          connect: {
+            name: category
+          },
+        },
+        user: {
+          connect: {
+            username: "velvetround"
+          },
+        },
+        status: {
+          connect: {
+            name: 'Suggestion'
+          }
+        }
+      }
+    })
+    res.json(feedback)
+  }
 }
