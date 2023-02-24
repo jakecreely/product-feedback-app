@@ -1,12 +1,19 @@
 import { ProductRequest } from "@/types";
+import { Category, Feedback, Prisma, Status, User } from "@prisma/client";
 import Link from "next/link";
 
-const Card = ({id, title, description, category, upvotes, comments}: ProductRequest)  => {
+type FeedbackWithAllRelations = Prisma.FeedbackGetPayload<{
+    include: { comments: true, user: true, category: true, status: true }
+}>
+
+const Card = (feedback: FeedbackWithAllRelations)  => {
+
+    const { id, title, description, upvotes, comments, user, category, status } = feedback
 
     return (
         //ID is hardcoded for now
         <Link href={"/feedback/detail/" + id}>
-        <div className="p-6 mb-4 bg-white rounded-xl flex flex-col md:flex-row md:pb-0 ">
+        <div className="p-6 mb-4 bg-white rounded-xl flex flex-col md:flex-row md:pb-0">
             <div className="block md:flex md:flex-col md:mr-32 md:ml-10">
             <div className="text-xs md:text-base font-bold pb-2 text-blue">
                 {title}    
@@ -15,7 +22,7 @@ const Card = ({id, title, description, category, upvotes, comments}: ProductRequ
                 {description}
             </div>
             <div className="flex gap-x-2 pb-4">
-            <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg">{category}</div>                
+            <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg">{category.name}</div>                
             </div>
             </div>
             <div className="flex justify-between md:order-first">

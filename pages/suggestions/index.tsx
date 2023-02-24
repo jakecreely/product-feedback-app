@@ -5,33 +5,19 @@ import Sort from "@/components/sort"
 import Card from "@/components/suggestionCard"
 import { GetStaticProps, NextPage } from "next"
 import { GetData, ProductRequest } from "@/types"
+import { Feedback, Prisma, PrismaClient } from "@prisma/client"
 
-// export const getStaticProps: GetStaticProps = async () => {
-//   const res = await fetch('localhost:3000/api/hello')
-//   const { productRequests }: GetData = await res.json()
+type SuggestionsWithAll = Prisma.FeedbackGetPayload<{
+  include: { comments: true, user: true, category: true, status: true }
+}>
 
-//   return {
-//     props: {
-//       suggestions: productRequests,
-//     }
-//   }
+type SuggestionsProps = {
+  suggestions: SuggestionsWithAll[]
+}
 
-// } 
-
-
-// const Suggestions: NextPage<{productRequests: ProductRequest[]}> = ({productRequests}) => {
-  const Suggestions: NextPage = () => {
+  const Suggestions: NextPage<SuggestionsProps> = ({suggestions}) => {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [suggestions, setSuggestions] = useState<ProductRequest[]>([])
-
-      useEffect(() => {
-        fetch('data.json')
-        .then(res => res.json())
-        .then(data => {
-          setSuggestions(data.productRequests)
-        })
-      }, [])
 
     let suggestionCards: ReactElement[] = []
 
@@ -47,16 +33,12 @@ import { GetData, ProductRequest } from "@/types"
         console.log(suggestion)
         suggestionCards.push(
         <Card 
-          id={suggestion.id}
-          title={suggestion.title}
-          description={suggestion.description}
-          category={suggestion.category}
-          upvotes={suggestion.upvotes}
-          comments={suggestion.comments}
-          status={suggestion.status}
+          {...suggestion}
         />
         )
-        })}
+        })
+    }
+    
 
 // `${isOpen ? 'bg-[#647196]' : 'bg-[#F7F8FD]'}
 
@@ -77,3 +59,23 @@ import { GetData, ProductRequest } from "@/types"
 }
 
 export default Suggestions
+
+export const getStaticProps: GetStaticProps = async () => {
+  const prisma = new PrismaClient()
+  const suggestions = await prisma.feedback.findMany({
+    include: {
+      comments: true,
+      user: true,
+      category: true,
+      status: true
+    }
+  })
+
+  return {
+    props: {
+      suggestions
+    }
+  }
+
+} 
+

@@ -4,67 +4,67 @@ import { useEffect, useState } from 'react'
 import { ProductRequest } from '@/types'
 import CommentCard from '@/components/commentCard'
 import Link from 'next/link'
+import { Category, Comment, Feedback, PrismaClient, Status, User } from '@prisma/client'
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
+import { Prisma } from '@prisma/client'
+import { ParsedUrlQuery } from 'querystring'
 
-export default function Details() {
-    const router = useRouter()
-    const { id } = router.query
-
-    const [suggestionById, setSuggestionById] = useState<ProductRequest>({} as ProductRequest)
-
-    useEffect(() => {
-        if (id === undefined) {
-            return
-        } else {
-            fetch('http://localhost:3000/api/suggestion/' + id).then(res => res.json()).then(data => {
-                setSuggestionById(data[0])
-            })
+type FeedbackWithAll = Prisma.FeedbackGetPayload<{
+    include: {
+        user: true,
+        category: true,
+        status: true,
+        comments: {
+            include: {
+                user: true,
+                replies: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
         }
-      }, [id])
+    }
+}>
+
+const Details: NextPage<FeedbackWithAll> = (props) => {
+    const router = useRouter()
 
     return (
         <div className='grid grid-cols-1 gap-y-6 p-6 md:px-10 md:py-14 lg:px-80 lg:py-20'>
             <div className='flex justify-between'>
                 <button className='bg-transparent px-2 py-2 text-black' onClick={() => router.back()}>Go Back</button>
-                <Link href={"/feedback/edit/" + id}>
+                <Link href={"/feedback/edit/" + props.id}>
                     <button className='px-2 py-2 bg-secondary'>Edit Feedback</button>
                 </Link>
             </div>
             <div className=''>
-                <Card 
-                    id={suggestionById.id}
-                    title={suggestionById.title}
-                    description={suggestionById.description}
-                    category={suggestionById.category}
-                    upvotes={suggestionById.upvotes}
-                    comments={suggestionById.comments}
-                    status={suggestionById.status}
+                <Card
+                    {...props}
                 />
                 <div className='p-6 bg-white rounded-xl md:px-8'>
                     <div className='text-lg'>
-                        {(suggestionById.comments === undefined ?  0 : suggestionById.comments.length)
-                        + ' Comments'
+                        {(props.comments === undefined ? 0 : props.comments.length)
+                            + ' Comments'
                         }
                     </div>
-                {suggestionById.comments?.map(comment => {
-                    return (
-                        <div>
-                        <CommentCard 
-                            id={comment.id}
-                            content={comment.content}
-                            user={comment.user}
-                            replies={comment.replies}
-                        />
-                        
-                        </div>
-                    )
-                })
-                }
+                    {props.comments?.map(comment => {
+                        return (
+                            <div>
+                                <CommentCard
+                                    {...comment}
+                                />
+
+                            </div>
+                        )
+                    })
+                    }
                 </div>
-                </div>
-                <div>
-                    <div className='flex flex-col gap-y-6 bg-white rounded-xl p-6'>
-                        <div className='text-lg'>Add a comment</div>
-                        <div className='flex flex-col'>
+            </div>
+            <div>
+                <div className='flex flex-col gap-y-6 bg-white rounded-xl p-6'>
+                    <div className='text-lg'>Add a comment</div>
+                    <div className='flex flex-col'>
                         <textarea className='w-full h-20' placeholder='Type your comment here'></textarea>
                         <div className='flex justify-between align-middle'>
                             <div>
@@ -72,9 +72,62 @@ export default function Details() {
                             </div>
                             <button className='bg-primary text-white text-xs px-4 py-2 rounded-xl mt-4'>Post Comment</button>
                         </div>
-                        </div>
-                        </div>
+                    </div>
                 </div>
+            </div>
         </div>
     )
+}
+
+export default Details
+
+// Not ideal, but it works for now
+export const getStaticProps: GetStaticProps = async (context) => {
+    const { id } = context.params!
+    if (id && (typeof id == 'string')) {
+        const prisma = new PrismaClient()
+        const feedback = await prisma.feedback.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                user: true,
+                category: true,
+                status: true,
+                comments: {
+                    include: {
+                        user: true,
+                        replies: {
+                            include: {
+                                user: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return {
+            props: {...feedback},
+        }
+    }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+
+    let fetchedIdList: {params: {id: string}}[] = []
+    const prisma = new PrismaClient()
+    let feedback = await prisma.feedback.findMany({
+        select: {
+            id: true
+        }
+    })
+    feedback.map((feedback) => {
+        fetchedIdList.push({ params: { id: feedback.id } })
+    })
+
+    return {
+        paths: fetchedIdList,
+        fallback: false, // can also be true or 'blocking'
+    }
 }

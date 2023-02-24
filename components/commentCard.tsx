@@ -1,8 +1,11 @@
-import { Comment, ProductRequest } from "@/types";
-import Link from "next/link";
+import {Prisma} from '@prisma/client'
 import ReplyCard from "./replyCard";
 
-const CommentCard = ({id, content, user, replies}: Comment)  => {
+type CommentCardProps = Prisma.CommentGetPayload<{
+    include: { user: true, replies: { include: { user: true } } }
+}>
+
+const CommentCard = ({id, content, user, replies}: CommentCardProps)  => {
     
     return (
         <div className="flex flex-col pt-4 md:flex-col md:pt-8">
@@ -28,7 +31,11 @@ const CommentCard = ({id, content, user, replies}: Comment)  => {
             {replies?.map((reply) => {
                 return (
                     <div className="pl-4 md:pl-10">
-                        <ReplyCard {...reply}/>
+                        <ReplyCard
+                            content={reply.content}
+                            user={reply.user}
+                            replyingTo={user.username}
+                        />
                     </div>
                 )
             })}
