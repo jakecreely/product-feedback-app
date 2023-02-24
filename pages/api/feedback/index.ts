@@ -37,6 +37,6 @@ export default async function handler(
         }
       }
     })
-    res.json(feedback)
+    res.status(201).json(feedback)
   }
 }

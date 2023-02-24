@@ -30,6 +30,21 @@ type FeedbackWithAll = Prisma.FeedbackGetPayload<{
 const Details: NextPage<FeedbackWithAll> = (props) => {
     const router = useRouter()
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        const {id} = router.query
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget as HTMLFormElement)
+        const data = Object.fromEntries(formData.entries())
+        console.log(JSON.stringify(data))
+        const res = await fetch('/api/feedback/comment/' + id, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        })
+        const result = await res.json()
+        router.replace(router.asPath)
+    }
+
+
     return (
         <div className='grid grid-cols-1 gap-y-6 p-6 md:px-10 md:py-14 lg:px-80 lg:py-20'>
             <div className='flex justify-between'>
@@ -61,11 +76,11 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
                     }
                 </div>
             </div>
-            <div>
+            <form onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-y-6 bg-white rounded-xl p-6'>
                     <div className='text-lg'>Add a comment</div>
                     <div className='flex flex-col'>
-                        <textarea className='w-full h-20' placeholder='Type your comment here'></textarea>
+                        <textarea name='content' id='content' className='w-full h-20' placeholder='Type your comment here'></textarea>
                         <div className='flex justify-between align-middle'>
                             <div>
                                 250 characters left
@@ -74,7 +89,7 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }
