@@ -39,7 +39,7 @@ const Card = (feedback: FeedbackWithAllRelations)  => {
                 </div>
                 </div>
             </div>
-            <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto ">
+            <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-black text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto md:ml-auto ">
                 <img src="/assets/shared/icon-comments.svg" className="object-scale-down"/>{comments === undefined ? 0 : comments.length}
                 </div>
         </div>
