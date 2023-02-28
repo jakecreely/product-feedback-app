@@ -13,10 +13,12 @@ type SuggestionsWithAll = Prisma.FeedbackGetPayload<{
 type NavBarProps = {
     suggestions: SuggestionsWithAll[],
     handleOpen: () => void,
-    isOpen: boolean
+    isOpen: boolean,
+    handleCategory: (category: string) => void,
+    selectedCategory: string
 }
 
-const NavBar: NextPage<NavBarProps> = ({handleOpen, isOpen, suggestions }) => {
+const NavBar: NextPage<NavBarProps> = ({handleOpen, isOpen, suggestions, handleCategory, selectedCategory }) => {
 
     return (
         <>
@@ -25,14 +27,14 @@ const NavBar: NextPage<NavBarProps> = ({handleOpen, isOpen, suggestions }) => {
                 <Header handleOpen={handleOpen} isOpen={isOpen}/>
             </div>
             <div className="hidden md:block">
-            <Tags/>
+            <Tags selectedCategory={selectedCategory} handleCategory={handleCategory}/>
             </div>
             <div className="hidden md:block">
             <Roadmap suggestions={suggestions}/> 
             </div>
             <div>
-            <div className={`${isOpen ? 'visible' : 'hidden'} fixed right-0 w-3/4 grid gap-y-6 p-6 bg-[#F7F8FD] md:hidden md:relative md:mt-0`}>
-                <Tags/>
+            <div className={`${isOpen ? 'visible' : 'hidden'} fixed right-0 w-3/4 h-full flex flex-col gap-y-6 p-6 bg-[#F7F8FD] md:hidden md:relative md:mt-0`}>
+                <Tags selectedCategory={selectedCategory} handleCategory={handleCategory}/>
                 <Roadmap suggestions={suggestions}/>
             </div>
             </div>
