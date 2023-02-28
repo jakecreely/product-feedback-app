@@ -27,10 +27,16 @@ const Card = (feedback: FeedbackWithAllRelations)  => {
             </div>
             <div className="flex justify-between md:order-first">
                 <div className="flex gap-2.5 py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg md:gap-0 md:px-3 md:py-3 md:flex-col md:justify-center md:mb-20">
-                <img src="/assets/shared/icon-arrow-up.svg" className="object-scale-down"/>{upvotes}
+                <img src="/assets/shared/icon-arrow-up.svg" className="object-scale-down"/>
+                <div className="font-bold text-sm text-black">
+                    {upvotes}
                 </div>
-                <div className="flex gap-1 py-2 px-4  text-secondary text-xs font-semibold rounded-lg md:hidden">
-                <img src="/assets/shared/icon-comments.svg" className="object-scale-down"/>{comments === undefined ? 0 : comments.length}
+                </div>
+                <div className="flex gap-2 py-2 px-4  text-secondary text-xs font-semibold rounded-lg md:hidden">
+                <img src="/assets/shared/icon-comments.svg" className="object-scale-down"/>
+                <div className="text-black font-bold text-sm">
+                    {comments === undefined ? 0 : comments.length}
+                </div>
                 </div>
             </div>
             <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto ">

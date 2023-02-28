@@ -31,7 +31,7 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
     const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        const {id} = router.query
+        const { id } = router.query
         e.preventDefault()
         const formData = new FormData(e.currentTarget as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
@@ -44,11 +44,51 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
         router.replace(router.asPath)
     }
 
+    interface ReplyState {
+        id: string,
+        reply: boolean
+    }
+
+    const [reply, setReply] = useState<ReplyState[]>()
+
+    useEffect(() => {
+        // Go through all comments and set the reply state as an array of objects with id and reply = false
+        const replyState = props.comments?.map(comment => {
+            return {
+                id: comment.id,
+                reply: false
+            }
+        }
+        )
+        setReply(replyState)
+    }, [])
+
+    const handleReply = (id: string) => {
+        // Find the comment with the id and set the reply state to true
+        const replyState = reply?.map(comment => {
+            if (comment.id === id) {
+                return {
+                    id: comment.id,
+                    reply: !comment.reply
+                }
+            } else {
+                return comment
+            }
+        })
+        setReply(replyState)
+    }
 
     return (
-        <div className='grid grid-cols-1 gap-y-6 p-6 md:px-10 md:py-14 lg:px-80 lg:py-20'>
+        <div className='grid grid-cols-1 gap-y-6 p-6 text-black md:px-10 md:py-14 lg:px-80 lg:py-20'>
             <div className='flex justify-between'>
-                <button className='bg-transparent px-2 py-2 text-black' onClick={() => router.back()}>Go Back</button>
+                <button className='bg-transparent px-2 py-2 text-black' onClick={() => router.back()}>
+                    <div className='flex flex-row gap-x-4'>
+                    <img src="/assets/shared/icon-arrow-left.svg" className="object-scale-down"/>
+                    <div>
+                        Go Back
+                    </div>
+                    </div>
+                </button>
                 <Link href={"/feedback/edit/" + props.id}>
                     <button className='px-2 py-2 bg-secondary'>Edit Feedback</button>
                 </Link>
@@ -58,16 +98,26 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
                     {...props}
                 />
                 <div className='p-6 bg-white rounded-xl md:px-8'>
-                    <div className='text-lg'>
+                    <div className='text-lg font-bold'>
                         {(props.comments === undefined ? 0 : props.comments.length)
                             + ' Comments'
                         }
                     </div>
                     {props.comments?.map(comment => {
+                        // Get the corresponding reply state for the comment as a defined boolean
+                        let replyState = false
+                        if (reply !== undefined) {
+                          let foundValue = reply.find(commentState => commentState.id === comment.id)?.reply
+                          if (foundValue !== undefined) {
+                            replyState = foundValue
+                          }
+                        }
                         return (
                             <div>
                                 <CommentCard
                                     {...comment}
+                                    isReply={replyState}
+                                    handleReply={handleReply}
                                 />
 
                             </div>
@@ -78,7 +128,7 @@ const Details: NextPage<FeedbackWithAll> = (props) => {
             </div>
             <form onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-y-6 bg-white rounded-xl p-6'>
-                    <div className='text-lg'>Add a comment</div>
+                    <div className='text-lg font-bold'>Add a comment</div>
                     <div className='flex flex-col'>
                         <textarea name='content' id='content' className='w-full h-20' placeholder='Type your comment here'></textarea>
                         <div className='flex justify-between align-middle'>
@@ -123,14 +173,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
         })
 
         return {
-            props: {...feedback},
+            props: { ...feedback },
         }
     }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
 
-    let fetchedIdList: {params: {id: string}}[] = []
+    let fetchedIdList: { params: { id: string } }[] = []
     const prisma = new PrismaClient()
     let feedback = await prisma.feedback.findMany({
         select: {
