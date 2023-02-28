@@ -45,7 +45,7 @@ type SuggestionsProps = {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 md:p-10 lg:px-40 lg:py-24 bg-[#F7F8FD]">
         <div className="lg:row-span-2 lg:col-span-3">
-        <NavBar handleOpen={() => setIsOpen(!isOpen)} isOpen={isOpen}/>
+        <NavBar handleOpen={() => setIsOpen(!isOpen)} isOpen={isOpen} suggestions={suggestions}/>
         </div>
         <div className="lg:col-span-9">
             <Sort />
