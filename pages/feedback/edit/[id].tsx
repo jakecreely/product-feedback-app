@@ -37,6 +37,14 @@ export default function Edit(props: EditFeedback) {
         router.push('/feedback/detail/' + result.id)
     }
 
+    const handleDelete = async () => {
+        await fetch('/api/feedback/delete', {
+            method: 'POST',
+            body: JSON.stringify({ id: feedback.id }),
+        })
+        router.push('/suggestions')
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         setFeedback({
             ...feedback,
@@ -124,10 +132,17 @@ export default function Edit(props: EditFeedback) {
                             <button
                                 className='bg-blue text-blue-500 rounded-md p-2 text-sm md:order-2 md:px-6 md:py-3'
                                 onClick={() => router.push('/feedback/detail/' + feedback.id)}
+                                type='button'
                             >
                                 Cancel
                             </button>
-                            <button className='text-white rounded-md p-2 bg-red-500 text-sm md:order-1 md:px-6 md:py-3'>Delete</button>
+                            <button 
+                                className='text-white rounded-md p-2 bg-red-500 text-sm md:order-1 md:px-6 md:py-3'
+                                type='button'
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </form>
