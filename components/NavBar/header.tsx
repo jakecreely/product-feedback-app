@@ -21,12 +21,12 @@ const Header: NextPage<Props> = (props) => {
         </button>
 
     return (
-        <div className="bg-mobile bg-no-repeat bg-cover grid grid-cols-2 md:grid-cols-1 px-5 py-3 md:px-0 md:py-0 md:bg-tablet md:rounded-lg lg:bg-desktop">
-            <div className="grid grid-cols-1 md:p-0 md:pt-24 md:pl-6 md:mr-12 md:pb-6 lg:pt-14">
-            <div className="font-jost font-bold text-white text-sm md:text-base">
+        <div className="bg-mobile bg-no-repeat bg-cover grid grid-cols-2 md:grid-cols-1 px-5 py-3 md:px-0 md:py-0 md:bg-tablet md:rounded-lg lg:bg-desktop md:h-full">
+            <div className="grid grid-cols-1 md:p-0 md:pt-20 md:pl-6 md:mr-12 md:pb-6 lg:pt-14">
+            <div className="font-jost font-bold text-white text-sm md:text-xl">
                 Frontend Mentor
             </div>
-            <div className="font-jost text-xs text-opacity-75 text-white">
+            <div className="font-jost text-xs text-opacity-75 text-white md:text-base">
                 Feedback Board
             </div>
             </div>

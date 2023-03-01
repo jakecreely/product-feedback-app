@@ -32,10 +32,15 @@ const Sort: FunctionComponent<Props> = ({suggestions, handleSort, chosenSort}) =
                 <option value="least_comments">Least Comments</option>
             </select>
             </div>
-            <div className="self-end">
+            <div className="self-end mt-auto">
             <Link href="/feedback/new" passHref>
-            <button className="py-3 px-4 bg-[#AD1FEA] text-xs flex-1">
-                + Add Feedback
+            <button className="px-4 bg-[#AD1FEA] text-xs flex-1 flex flex-row gap-x-2">
+                <div className="my-auto">
+                    <img src='/assets/shared/icon-plus.svg' alt='+'/>
+                </div>
+                <div className="my-auto">
+                    Add Feedback
+                </div>
             </button>
             </Link>
             </div>

@@ -1,6 +1,7 @@
 import { ProductRequest } from "@/types";
 import { Category, Feedback, Prisma, Status, User } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 type FeedbackWithAllRelations = Prisma.FeedbackGetPayload<{
     include: { comments: true, user: true, category: true, status: true }
@@ -9,20 +10,23 @@ type FeedbackWithAllRelations = Prisma.FeedbackGetPayload<{
 const Card = (feedback: FeedbackWithAllRelations)  => {
 
     const { id, title, description, upvotes, comments, user, category, status } = feedback
+    const router = useRouter()
 
     return (
-        //ID is hardcoded for now
-        <Link href={"/feedback/detail/" + id}>
-        <div className="p-6 mb-4 bg-white rounded-xl flex flex-col md:flex-row md:pb-0">
+        <div 
+            className="p-6 mb-4 bg-white rounded-xl flex flex-col md:flex-row md:pb-0 hover:cursor-pointer" 
+            onClick={() => router.push("/feedback/detail/" + id)}
+            
+        >
             <div className="block md:flex md:flex-col md:mr-32 md:ml-10">
-            <div className="text-xs md:text-base font-bold pb-2 text-blue">
+            <div className="text-xs md:text-lg font-bold pb-2 text-blue">
                 {title}    
             </div>
-            <div className="text-xs md:text-sm font-normal md:font-base pb-2 text-lightGrey">
+            <div className="text-xs md:text-base font-normal pb-2 text-lightGrey">
                 {description}
             </div>
             <div className="flex gap-x-2 pb-4">
-            <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg">{category.name}</div>                
+            <div className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs md:text-sm font-semibold rounded-lg">{category.name}</div>                
             </div>
             </div>
             <div className="flex justify-between md:order-first">
@@ -39,11 +43,10 @@ const Card = (feedback: FeedbackWithAllRelations)  => {
                 </div>
                 </div>
             </div>
-            <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-black text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto md:ml-auto ">
+            <div className="hidden md:visible md:flex py-2 px-4 bg-[#F2F4FF] text-black text-xs font-semibold rounded-lg md:bg-transparent md:gap-2 md:px-0 md:py-0 md:flex-row items-center md:mt-auto md:mb-auto md:ml-auto md:text-base md:font-bold">
                 <img src="/assets/shared/icon-comments.svg" className="object-scale-down"/>{comments === undefined ? 0 : comments.length}
                 </div>
         </div>
-        </Link>
     )
 }
 

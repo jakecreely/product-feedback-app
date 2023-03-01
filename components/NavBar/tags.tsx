@@ -24,7 +24,7 @@ const Tags: FunctionComponent<Props> = ({selectedCategory, handleCategory}) => {
             }
             return (
                 <div 
-                className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg hover:bg-slate-300 hover:cursor-pointer"
+                className="py-2 px-4 bg-[#F2F4FF] text-secondary text-xs font-semibold rounded-lg hover:bg-[#CFD7FF] hover:cursor-pointer"
                 onClick={() => handleCategory(category)}
             >
                 {category}
